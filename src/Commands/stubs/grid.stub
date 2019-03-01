@@ -1,0 +1,48 @@
+<?php
+
+namespace DummyNamespace;
+
+use BaiSam\Support\Grid;
+use BaiSam\UI\Grid\Toolbar;
+
+class DummyClass extends Grid
+{
+    /**
+     * 定义表格标题
+     * @var string
+     */
+    protected $title = null;
+
+    public function buildGrid()
+    {
+        $this->config('refresh', true);
+        $this->config('settings', true);
+
+        //开始构建表格
+    }
+
+    public function buildColumns()
+    {
+        //构建表格列
+    }
+
+    public function buildFilters()
+    {
+        //构建过滤表单
+    }
+
+    public function leftToolbar(Toolbar $toolbar)
+    {
+        //构建默认工具栏
+    }
+
+    public function rightToolbar(Toolbar $toolbar)
+    {
+        //构建右则工具栏
+    }
+
+    public function topToolbar(Toolbar $toolbar)
+    {
+        //构建Box顶部工具栏
+    }
+}

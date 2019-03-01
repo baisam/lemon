@@ -1,0 +1,107 @@
+<?php
+
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Migrations\Migration;
+
+class SetupPermissionTables extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        // Roles
+        Schema::create('{roles_table}', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('domain', 50);
+            $table->string('display_name')->nullable();
+            $table->mediumText('description')->nullable();
+            $table->timestamps();
+
+            $table->unique(['name', 'domain']);
+        });
+
+        // Permissions
+        Schema::create('{permissions_table}', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+            $table->string('domain', 50);
+            $table->string('scope', 20);
+            $table->string('display_name')->nullable();
+            $table->mediumText('description')->nullable();
+            $table->timestamps();
+
+            $table->unique(['name', 'domain']);
+        });
+
+        // Permission_Roles
+        Schema::create('{permission_roles_table}', function (Blueprint $table) {
+            $table->unsignedInteger('permission_id');
+            $table->unsignedInteger('role_id');
+
+            $table->foreign('permission_id')
+                ->references('id')
+                ->on('{permissions_table}')
+                ->onDelete('cascade');
+
+            $table->foreign('role_id')
+                ->references('id')
+                ->on('{roles_table}')
+                ->onDelete('cascade');
+
+            $table->primary(['permission_id', 'role_id']);
+        });
+
+        // Model_Roles
+        Schema::create('{model_roles_table}', function (Blueprint $table) {
+            $table->unsignedInteger('role_id');
+
+            $table->string('model_type');
+            $table->unsignedBigInteger('model_id');
+            $table->index(['model_id', 'model_type', ]);
+
+            $table->foreign('role_id')
+                ->references('id')
+                ->on('{roles_table}')
+                ->onDelete('cascade');
+
+            $table->primary(['model_id', 'model_type', 'role_id'],
+                'model_roles_primary');
+        });
+
+        // Model_Permissions
+        Schema::create('{model_permissions_table}', function (Blueprint $table) {
+            $table->unsignedInteger('permission_id');
+
+            $table->string('model_type');
+            $table->unsignedBigInteger('model_id');
+            $table->index(['model_id', 'model_type', ]);
+
+            $table->foreign('permission_id')
+                ->references('id')
+                ->on('{permissions_table}')
+                ->onDelete('cascade');
+
+            $table->primary(['model_id', 'model_type', 'permission_id'],
+                'model_permissions_primary');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('{model_permissions_table}');
+        Schema::dropIfExists('{model_roles_table}');
+        Schema::dropIfExists('{permission_roles_table}');
+        Schema::dropIfExists('{permissions_table}');
+        Schema::dropIfExists('{roles_table}');
+    }
+}

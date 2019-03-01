@@ -1,0 +1,13 @@
+<?php
+
+namespace DummyNamespace;
+
+use BaiSam\Support\Form;
+
+class DummyClass extends Form
+{
+    public function buildForm()
+    {
+        //开始构建表单
+    }
+}

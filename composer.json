@@ -1,0 +1,34 @@
+{
+    "name": "baisam/lemon",
+    "description": "The web admin library for laravel.",
+    "keywords": ["laravel", "layout", "form", "grid", "menu", "permission", "tool"],
+    "type": "library",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=7.0",
+        "laravel/framework": "5.5.*",
+        "baisam/lemon-ui": "dev-master"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Baisam development team",
+            "email": "liangyibo12@gmail.com"
+        }
+    ],
+    "autoload": {
+	"files": [
+            "src/Foundation/helpers.php"
+        ],
+        "psr-4": {
+            "BaiSam\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BaiSam\\Foundation\\LayoutServiceProvider"
+            ]
+        }
+    }
+}
