@@ -294,6 +294,9 @@ class Menu implements Htmlable
                     if ($menu->hasChildren()) {
                         $this->filterMenuItem($menu);
                     }
+                    if (!$menu->hasChildren() && ($menu->formatUrl() == '')) {
+                        $item->forget($index);
+                    }
                 }
                 else {
                     $item->forget($index);
@@ -314,6 +317,9 @@ class Menu implements Htmlable
                     $separator = false;
                     if ($menu->hasChildren()) {
                         $this->filterMenuItem($menu);
+                    }
+                    if (!$menu->hasChildren() && ($menu->formatUrl() == '')) {
+                        $item->forget($index);
                     }
                 }
                 else {
