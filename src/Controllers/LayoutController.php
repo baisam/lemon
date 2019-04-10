@@ -52,7 +52,7 @@ trait LayoutController
         }
 
         // 初始化面包屑导航
-        $layout->breadcrumb('breadcrumb')->link('首页', '/')->icon('home');
+        $layout->breadcrumb('breadcrumb')->link('首页', route('home'))->icon('home');
 
         // 加载内容导航
         if (method_exists($this, 'navigation')) {
