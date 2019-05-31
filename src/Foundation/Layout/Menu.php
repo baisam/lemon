@@ -137,9 +137,11 @@ class Menu implements Htmlable
      * @param string $title
      * @param string|\Closure $url
      * @param string|null $icon
+     * @param array|null $params
+     * @param boolean|null $secure
      * @return \BaiSam\UI\Layout\Component\Menu
      */
-    public function add($id, $title, $url, $icon = null)
+    public function add($id, $title, $url, $icon = null, $params = [], $secure = null)
     {
         $last = last(self::$menuStack);
         if (empty($last)) {
@@ -158,7 +160,7 @@ class Menu implements Htmlable
 
 
         if ($url) {
-            $menu->url($url);
+            $menu->url($url, $params, $secure);
         }
 
         if (isset($icon)) {
