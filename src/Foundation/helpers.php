@@ -7,6 +7,37 @@
  * Copyright ©2018 Jiangxi baisam information technology co., LTD. All rights reserved.
  */
 
+/**#@+
+ * Constants for expressing human-readable data sizes in their respective number of bytes.
+ *
+ * @since 4.4.0
+ */
+define( 'KB_IN_BYTES', 1024 );
+define( 'MB_IN_BYTES', 1024 * KB_IN_BYTES );
+define( 'GB_IN_BYTES', 1024 * MB_IN_BYTES );
+define( 'TB_IN_BYTES', 1024 * GB_IN_BYTES );
+/**#@-*/
+
+/**#@+
+ * Constants for expressing human-readable intervals
+ * in their respective number of seconds.
+ *
+ * Please note that these values are approximate and are provided for convenience.
+ * For example, MONTH_IN_SECONDS wrongly assumes every month has 30 days and
+ * YEAR_IN_SECONDS does not take leap years into account.
+ *
+ * If you need more accuracy please consider using the DateTime class (https://secure.php.net/manual/en/class.datetime.php).
+ *
+ * @since 3.5.0
+ * @since 4.4.0 Introduced `MONTH_IN_SECONDS`.
+ */
+define( 'MINUTE_IN_SECONDS', 60 );
+define( 'HOUR_IN_SECONDS',   60 * MINUTE_IN_SECONDS );
+define( 'DAY_IN_SECONDS',    24 * HOUR_IN_SECONDS   );
+define( 'WEEK_IN_SECONDS',    7 * DAY_IN_SECONDS    );
+define( 'MONTH_IN_SECONDS',  30 * DAY_IN_SECONDS    );
+define( 'YEAR_IN_SECONDS',  365 * DAY_IN_SECONDS    );
+/**#@-*/
 
 /**
  * Add slashes to a string or array of strings.
@@ -488,6 +519,34 @@ function wp_is_uuid( $uuid, $version = null ) {
 }
 
 /**
+ * Converts a shorthand byte value to an integer byte value.
+ *
+ * @since 2.3.0
+ * @since 4.6.0 Moved from media.php to load.php.
+ *
+ * @link https://secure.php.net/manual/en/function.ini-get.php
+ * @link https://secure.php.net/manual/en/faq.using.php#faq.using.shorthandbytes
+ *
+ * @param string $value A (PHP ini) byte value, either shorthand or ordinary.
+ * @return int An integer byte value.
+ */
+function wp_convert_hr_to_bytes( $value ) {
+    $value = strtolower( trim( $value ) );
+    $bytes = (int) $value;
+
+    if ( false !== strpos( $value, 'g' ) ) {
+        $bytes *= GB_IN_BYTES;
+    } elseif ( false !== strpos( $value, 'm' ) ) {
+        $bytes *= MB_IN_BYTES;
+    } elseif ( false !== strpos( $value, 'k' ) ) {
+        $bytes *= KB_IN_BYTES;
+    }
+
+    // Deal with large (float) values which run into the maximum integer size.
+    return min( $bytes, PHP_INT_MAX );
+}
+
+/**
  * 生成自动编号
  * @example
  *   generate_serial_number('20130700001T', 5, '201307', 'T');
@@ -709,4 +768,59 @@ function tree_to_list($tree, $pk, $icon = ' ', $child = '_child') {
     }
 
     return $list;
+}
+
+
+if (function_exists('mb_substr_replace') === false)
+{
+    function mb_substr_replace($string, $replacement, $start, $length = null, $encoding = null)
+    {
+        if (is_array($string)) {
+            $arr = [];
+            foreach ($string as $_key => $_str) {
+                $arr[$_key] = mb_substr_replace($_str, $replacement, $start, $length, $encoding);
+            }
+
+            return $arr;
+        }
+
+        if (extension_loaded('mbstring') === true)
+        {
+            $string_length = (is_null($encoding) === true) ? mb_strlen($string) : mb_strlen($string, $encoding);
+
+            if ($start < 0)
+            {
+                $start = max(0, $string_length + $start);
+            }
+
+            else if ($start > $string_length)
+            {
+                $start = $string_length;
+            }
+
+            if ($length < 0)
+            {
+                $length = max(0, $string_length - $start + $length);
+            }
+
+            else if ((is_null($length) === true) || ($length > $string_length))
+            {
+                $length = $string_length;
+            }
+
+            if (($start + $length) > $string_length)
+            {
+                $length = $string_length - $start;
+            }
+
+            if (is_null($encoding) === true)
+            {
+                return mb_substr($string, 0, $start) . $replacement . mb_substr($string, $start + $length, $string_length - $start - $length);
+            }
+
+            return mb_substr($string, 0, $start, $encoding) . $replacement . mb_substr($string, $start + $length, $string_length - $start - $length, $encoding);
+        }
+
+        return (is_null($length) === true) ? substr_replace($string, $replacement, $start) : substr_replace($string, $replacement, $start, $length);
+    }
 }
