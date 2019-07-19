@@ -293,12 +293,17 @@ class Menu implements Htmlable
 
                 if (call_user_func($this->filter, $menu)) {
                     $separator = false;
-                    //TODO 待优化，不能通过url是否为空检查
+
                     if ($menu->hasChildren()) {
                         $this->filterMenuItem($menu);
                     }
-                    else if ($menu->formatUrl() == '') {
-                        $item->forget($index);
+
+                    // 递归完成后,回溯代码,此时hasChildren需要重新执行
+                    if (!$menu->hasChildren()) {
+                        //@TODO 待优化，不能通过url是否为空检查
+                        if (empty($menu->formatUrl())) {
+                            $item->forget($index);
+                        }
                     }
                 }
                 else {
@@ -318,12 +323,17 @@ class Menu implements Htmlable
 
                 if (call_user_func($this->filter, $menu)) {
                     $separator = false;
-                    //TODO 待优化，不能通过url是否为空检查
+
                     if ($menu->hasChildren()) {
                         $this->filterMenuItem($menu);
                     }
-                    else if ($menu->formatUrl() == '') {
-                        $item->forget($index);
+
+                    // 递归完成后,回溯代码,此时hasChildren需要重新执行
+                    if (!$menu->hasChildren()) {
+                        //@TODO 待优化，不能通过url是否为空检查
+                        if (empty($menu->formatUrl())) {
+                            $item->forget($index);
+                        }
                     }
                 }
                 else {
