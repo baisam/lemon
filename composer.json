@@ -7,7 +7,7 @@
     "require": {
         "php": ">=7.0",
         "laravel/framework": "5.5.*",
-        "baisam/lemon-ui": "dev-develop"
+        "baisam/lemon-ui": "^0.1"
     },
     "license": "MIT",
     "authors": [
