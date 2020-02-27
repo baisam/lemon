@@ -9,6 +9,7 @@ namespace BaiSam\Foundation;
 
 
 use BaiSam\UI\Form\Helper as FormHelper;
+use Illuminate\Support\Arr;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Events\Dispatcher as EventDispatcher;
@@ -62,8 +63,8 @@ class FormBuilder
             $options = ['action' => $options];
         }
 
-        $action = array_get($options, 'action', null);
-        $method = array_get($options, 'method', 'POST');
+        $action = Arr::get($options, 'action', null);
+        $method = Arr::get($options, 'method', 'POST');
 
         if (is_null($formClass)) {
             $formClass = '\BaiSam\Support\Form';
@@ -83,13 +84,13 @@ class FormBuilder
             $form->setModel($model);
         }
 
-        array_forget($options, ['action', 'method']);
+        Arr::forget($options, ['action', 'method']);
         $form->setOptions($options);
 
         $form->buildForm();
 
         //TODO 支持表单客户端验证
-        if ( array_get($options, 'client_validation', false) ) {
+        if ( Arr::get($options, 'client_validation', false) ) {
             $this->helper->getResource()->requireResource('form.validate');
         }
 

@@ -74,7 +74,7 @@ class Grid implements Renderable
     protected $request;
 
     /**
-     * @var 分页
+     * @var array
      */
     protected $perPages;
     /**

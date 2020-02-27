@@ -12,6 +12,7 @@ namespace BaiSam\Foundation;
 
 
 use BaiSam\UI\Grid\Helper as GridHelper;
+use Illuminate\Support\Str;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Events\Dispatcher as EventDispatcher;
 
@@ -78,7 +79,7 @@ class GridBuilder
         // 构建工具栏
         $methods = get_class_methods($grid);
         $methods = array_filter($methods, function ($method) {
-            return ends_with(strtolower($method), 'toolbar');
+            return Str::endsWith(strtolower($method), 'toolbar');
         });
         foreach ($methods as $method) {
             $name = substr($method, 0, -7);
